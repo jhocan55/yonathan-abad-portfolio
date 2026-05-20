@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yonathan Abad — Visual Designer</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08060f;--bg2:#0d0a1a;
+  --p1:#7B2FBE;--p2:#A855F7;--p3:#C084FC;
+  --w:#fff;--g1:rgba(255,255,255,.75);--g2:rgba(255,255,255,.45);--g3:rgba(255,255,255,.2);
+  --glass:rgba(255,255,255,.05);--gb:rgba(255,255,255,.1);
+  --r:24px;--r2:32px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--w);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── CURSOR GLOW ── */
+#cg{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(123,47,190,.07) 0%,transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);transition:left .12s ease,top .12s ease}
+
+/* ── NAV ── */
+nav{position:fixed;inset:0 0 auto;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);background:rgba(8,6,15,.75);border-bottom:1px solid var(--gb);transition:background .3s}
+.nav-logo{font-size:15px;font-weight:700;letter-spacing:-.3px}
+.nav-menu{display:flex;gap:28px;list-style:none}
+.nav-menu a{font-size:13px;font-weight:500;color:var(--g2);text-decoration:none;transition:color .2s}
+.nav-menu a:hover{color:var(--w)}
+.nav-cta{padding:8px 20px;border-radius:100px;background:var(--glass);border:1px solid var(--gb);font-size:13px;font-weight:600;color:var(--w);text-decoration:none;transition:all .25s}
+.nav-cta:hover{background:rgba(123,47,190,.25);border-color:rgba(168,85,247,.5)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;padding:140px 80px 100px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 90% 55% at 50% -10%,rgba(123,47,190,.55) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 35% at 85% 85%,rgba(168,85,247,.15) 0%,transparent 50%),
+             var(--bg)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:100px;background:rgba(123,47,190,.2);border:1px solid rgba(123,47,190,.45);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--p3);margin-bottom:28px;opacity:0;animation:fup .7s ease .1s forwards}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--p3);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.hero-h1{font-size:clamp(60px,9vw,108px);font-weight:900;letter-spacing:-4px;line-height:.95;text-align:center;margin-bottom:10px;opacity:0;animation:fup .8s ease .25s forwards}
+.hero-h2{font-size:clamp(38px,6vw,76px);font-weight:700;letter-spacing:-2.5px;text-align:center;color:var(--g2);margin-bottom:56px;opacity:0;animation:fup .8s ease .4s forwards}
+.hero-card-wrap{position:relative;width:100%;max-width:1100px;opacity:0;animation:fup 1s ease .55s forwards}
+.hero-glow{position:absolute;inset:-60px;background:radial-gradient(ellipse at 50% 50%,rgba(123,47,190,.35) 0%,transparent 65%);z-index:0;pointer-events:none}
+.hero-card{width:100%;border-radius:var(--r2);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 50px 130px rgba(0,0,0,.85),0 0 100px rgba(123,47,190,.25);position:relative;z-index:1;animation:flt0 9s ease-in-out infinite}
+.hero-card img{width:100%;display:block}
+.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fadein 1s ease 1.6s forwards}
+.scroll-hint span{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--g3)}
+.scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,rgba(168,85,247,.7),transparent);animation:sline 2.2s ease-in-out 2.2s infinite}
+@keyframes sline{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(44px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.45s}
+
+/* ── FLOAT ANIMS ── */
+@keyframes flt0{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes flt1{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-14px) rotate(-.5deg)}}
+@keyframes flt2{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-11px) rotate(2deg)}}
+@keyframes flt3{0%,100%{transform:translateY(0) rotate(.5deg)}50%{transform:translateY(-18px) rotate(-.8deg)}}
+.fa{animation:flt1 7s ease-in-out infinite}
+.fb{animation:flt2 9s ease-in-out infinite}
+.fc{animation:flt3 6s ease-in-out infinite}
+@keyframes fup{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadein{to{opacity:1}}
+
+/* ── FLOAT CARD ── */
+.fc-card{border-radius:var(--r);overflow:hidden;box-shadow:0 0 0 1px var(--gb),0 30px 80px rgba(0,0,0,.6);transition:box-shadow .3s ease;will-change:transform}
+.fc-card:hover{box-shadow:0 0 0 1px rgba(168,85,247,.3),0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(123,47,190,.2)}
+.fc-card img{width:100%;display:block}
+
+/* ── DIVIDER ── */
+.div{height:1px;background:linear-gradient(90deg,transparent 0%,rgba(168,85,247,.3) 25%,rgba(168,85,247,.3) 75%,transparent 100%);margin:0 80px}
+
+/* ── SECTION BASE ── */
+.s{padding:120px 80px;position:relative;overflow:hidden}
+.si{max-width:1300px;margin:0 auto}
+.s-num{font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--p2);margin-bottom:14px}
+.s-h{font-size:clamp(40px,5vw,68px);font-weight:900;letter-spacing:-2.5px;line-height:1.0;margin-bottom:20px}
+.s-p{font-size:16px;color:var(--g2);line-height:1.85;max-width:460px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.chip{padding:9px 19px;border-radius:100px;background:rgba(123,47,190,.15);border:1px solid rgba(123,47,190,.35);font-size:13px;font-weight:500;color:rgba(255,255,255,.85);transition:all .25s}
+.chip:hover{background:rgba(123,47,190,.35);border-color:rgba(168,85,247,.6);transform:translateY(-2px)}
+
+/* ── BG VARIANTS ── */
+.bg2{background:radial-gradient(ellipse 65% 50% at 80% 50%,rgba(123,47,190,.12) 0%,transparent 60%),var(--bg)}
+.bg3{background:var(--bg2)}
+.bg4{background:radial-gradient(ellipse 50% 60% at 15% 55%,rgba(123,47,190,.1) 0%,transparent 60%),var(--bg)}
+
+/* ── EMAIL ── */
+.email-grid{display:grid;grid-template-columns:380px 1fr;gap:80px;align-items:center}
+.email-stack{position:relative;height:520px}
+.e1{position:absolute;top:0;left:0;right:50px;bottom:60px;z-index:1}
+.e2{position:absolute;bottom:0;right:0;left:50px;top:60px;z-index:2}
+
+/* ── SOCIAL ── */
+.social-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:56px}
+.social-text{background:rgba(123,47,190,.12);border:1px solid rgba(123,47,190,.22);border-radius:var(--r);padding:44px;display:flex;flex-direction:column;justify-content:flex-end}
+.social-text p{font-size:20px;font-weight:600;line-height:1.45;margin-bottom:24px}
+.social-right{display:flex;flex-direction:column;gap:22px}
+
+/* ── INTERACTIVE ── */
+.ixn-full{border-radius:var(--r2);overflow:hidden;position:relative;box-shadow:0 0 0 1px var(--gb),0 60px 140px rgba(0,0,0,.75),0 0 80px rgba(123,47,190,.2);margin-top:56px}
+.ixn-full img{width:100%;display:block}
+.ixn-cap{position:absolute;bottom:0;left:0;right:0;padding:56px;background:linear-gradient(0deg,rgba(8,6,15,.95) 0%,transparent 100%)}
+.ixn-cap small{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.35);display:block;margin-bottom:8px}
+.ixn-cap strong{font-size:22px;font-weight:600;max-width:600px;display:block;line-height:1.4}
+
+/* ── INFOGRAPHICS ── */
+.inf-grid{display:grid;grid-template-columns:1fr 340px;gap:22px;margin-top:56px;align-items:start}
+.stats{display:flex;flex-direction:column;gap:16px}
+.stat{border-radius:var(--r);padding:32px;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;inset:0;border-radius:var(--r);border:1px solid rgba(255,255,255,.07);pointer-events:none}
+.stat-n{font-size:52px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:8px}
+.stat-l{font-size:13px;color:var(--g2);line-height:1.5}
+.gtext{background:linear-gradient(135deg,#fff 0%,#C084FC 60%,#7B2FBE 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── PRESENTATIONS ── */
+.pptx{margin-top:56px;border-radius:var(--r2);overflow:hidden;box-shadow:0 0 0 1px var(--gb),0 60px 140px rgba(0,0,0,.75)}
+.pptx img{width:100%;display:block}
+
+/* ── CONTACT ── */
+.contact{padding:140px 80px;text-align:center;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 70% 55% at 50% 65%,rgba(123,47,190,.28) 0%,transparent 60%),var(--bg)}
+.contact-h{font-size:clamp(52px,8vw,96px);font-weight:900;letter-spacing:-3.5px;line-height:.95;margin-bottom:24px}
+.contact-p{font-size:18px;color:var(--g2);line-height:1.75;max-width:560px;margin:0 auto 52px}
+.btns{display:flex;gap:16px;justify-content:center;margin-bottom:72px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:16px 34px;border-radius:100px;font-size:15px;font-weight:700;text-decoration:none;transition:all .25s;cursor:pointer;border:none}
+.btn-p{background:linear-gradient(135deg,#7B2FBE,#A855F7);color:#fff;box-shadow:0 8px 32px rgba(123,47,190,.5)}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 18px 50px rgba(123,47,190,.65)}
+.btn-g{background:var(--glass);border:1px solid var(--gb);color:#fff}
+.btn-g:hover{background:rgba(255,255,255,.09);transform:translateY(-3px)}
+.ccard{display:inline-flex;align-items:center;gap:16px;background:var(--glass);border:1px solid var(--gb);border-radius:100px;padding:10px 24px 10px 10px}
+.cavatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#7B2FBE,#A855F7);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,.15);flex-shrink:0}
+.cinfo .cn{font-size:14px;font-weight:600;text-align:left}
+.cinfo .ce{font-size:12px;color:var(--g2);text-align:left}
+
+/* ── FOOTER ── */
+footer{padding:28px 80px;border-top:1px solid var(--gb);display:flex;justify-content:space-between;color:var(--g3);font-size:12px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:0 28px}
+  .nav-menu{display:none}
+  .hero{padding:120px 28px 80px}
+  .div{margin:0 28px}
+  .s{padding:80px 28px}
+  .email-grid{grid-template-columns:1fr;gap:48px}
+  .email-stack{height:420px}
+  .e1{right:30px;bottom:50px}
+  .e2{left:30px;top:50px}
+  .social-grid{grid-template-columns:1fr}
+  .inf-grid{grid-template-columns:1fr}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .contact{padding:100px 28px}
+  footer{padding:24px 28px;flex-direction:column;gap:6px;text-align:center}
+  .btns{flex-direction:column;align-items:center}
+}
+
+@media(max-width:580px){
+  .hero-h1{letter-spacing:-2px}
+  .hero-h2{margin-bottom:36px}
+  .hero-card-wrap{max-width:100%}
+  .s-h{letter-spacing:-1.5px}
+  .email-stack{height:320px}
+  .e1{right:20px;bottom:40px}
+  .e2{left:20px;top:40px}
+  .stats{grid-template-columns:1fr}
+  .stat-n{font-size:42px}
+  .contact-h{letter-spacing:-2px}
+  .chips{gap:8px}
+  .chip{font-size:12px;padding:7px 14px}
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--gb);border-bottom:1px solid var(--gb);padding:18px 0;background:rgba(123,47,190,.05)}
+.marquee-track{display:flex;gap:0;animation:marquee 28s linear infinite;width:max-content}
+.marquee-track:hover{animation-play-state:paused}
+.mitem{padding:0 40px;font-size:13px;font-weight:600;color:var(--g2);letter-spacing:.5px;white-space:nowrap;display:flex;align-items:center;gap:16px}
+.mitem::after{content:'✦';color:rgba(168,85,247,.5);font-size:10px}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+
+<div id="cg"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <span class="nav-logo">Yonathan Abad</span>
+  <ul class="nav-menu">
+    <li><a href="#email">Email</a></li>
+    <li><a href="#social">Social</a></li>
+    <li><a href="#interactive">Interactive</a></li>
+    <li><a href="#infographics">Infographics</a></li>
+    <li><a href="#presentations">Presentations</a></li>
+  </ul>
+  <a href="mailto:yoyovisuel@gmail.com" class="nav-cta">Let's talk →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <span class="hero-badge"><span class="pulse"></span>Visual Designer — Open to projects</span>
+  <h1 class="hero-h1">Yonathan Abad</h1>
+  <p class="hero-h2">Visual Designer</p>
+  <div class="hero-card-wrap">
+    <div class="hero-glow"></div>
+    <div class="hero-card fc-card" data-tilt>
+      <img src="assets/page-1.png" alt="Yonathan Abad — Visual Designer" />
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll to explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="mitem">Visual Design</span>
+    <span class="mitem">Art Direction</span>
+    <span class="mitem">UI Design</span>
+    <span class="mitem">Email Campaigns</span>
+    <span class="mitem">Social Media</span>
+    <span class="mitem">Interactive Design</span>
+    <span class="mitem">Data Visualization</span>
+    <span class="mitem">PowerPoint Presentations</span>
+    <span class="mitem">Learning Design</span>
+    <span class="mitem">Brand Identity</span>
+    <span class="mitem">Visual Design</span>
+    <span class="mitem">Art Direction</span>
+    <span class="mitem">UI Design</span>
+    <span class="mitem">Email Campaigns</span>
+    <span class="mitem">Social Media</span>
+    <span class="mitem">Interactive Design</span>
+    <span class="mitem">Data Visualization</span>
+    <span class="mitem">PowerPoint Presentations</span>
+    <span class="mitem">Learning Design</span>
+    <span class="mitem">Brand Identity</span>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<!-- EMAIL CAMPAIGNS -->
+<section class="s bg2" id="email">
+  <div class="si">
+    <div class="email-grid">
+      <div>
+        <p class="s-num rv">01 — Work</p>
+        <h2 class="s-h rv d1">Email<br>Campaigns</h2>
+        <p class="s-p rv d2">In an overcrowded inbox, design is what earns attention. I focus on visual hierarchy and email structure to create a natural reading flow — an aesthetic that reinforces your brand identity and guides the reader effortlessly toward the click.</p>
+        <div class="chips rv d3">
+          <span class="chip">Engaging Experience</span>
+          <span class="chip">Retention</span>
+          <span class="chip">Conversion</span>
+        </div>
+      </div>
+      <div class="email-stack">
+        <div class="fc-card fa e1 rv d1" data-tilt>
+          <img src="assets/page-2.png" alt="Email campaign designs" />
+        </div>
+        <div class="fc-card fb e2 rv d2" data-tilt>
+          <img src="assets/page-3.png" alt="Email campaign banners" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- SOCIAL MEDIA -->
+<section class="s bg3" id="social">
+  <div class="si">
+    <p class="s-num rv">02 — Work</p>
+    <h2 class="s-h rv d1">Social Media</h2>
+    <div class="social-grid">
+      <div class="fc-card fa rv" data-tilt>
+        <img src="assets/page-4.png" alt="Social media visual designs" />
+      </div>
+      <div class="social-right">
+        <div class="social-text rv d1">
+          <p>On social media, you have a fraction of a second to exist. I create visuals that assert your identity and drive action.</p>
+          <div class="chips">
+            <span class="chip">Visual Identity</span>
+            <span class="chip">Call-to-action</span>
+            <span class="chip">Visual Impact</span>
+            <span class="chip">+ Visibility</span>
+          </div>
+        </div>
+        <div class="fc-card fb rv d2" data-tilt style="flex:1;overflow:hidden;min-height:220px">
+          <img src="assets/page-5.png" alt="Social media posts grid" style="height:100%;object-fit:cover" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- INTERACTIVE -->
+<section class="s bg4" id="interactive">
+  <div class="si">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:40px">
+      <div>
+        <p class="s-num rv">03 — Work</p>
+        <h2 class="s-h rv d1">Interactive<br>Information<br>Design</h2>
+      </div>
+      <div style="max-width:400px">
+        <p class="s-p rv d2">By betting on interactivity, I transform dense content into fluid experiences that make learning easier and information more memorable.</p>
+        <div class="chips rv d3">
+          <span class="chip">Learning Design</span>
+          <span class="chip">UX / UI</span>
+          <span class="chip">Engagement</span>
+        </div>
+      </div>
+    </div>
+    <div class="ixn-full fc-card fc rv d1" data-tilt>
+      <img src="assets/page-6.png" alt="Interactive information design work" />
+      <div class="ixn-cap">
+        <small>Featured Work</small>
+        <strong>Learning experiences that transform complex content into memorable journeys</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- INFOGRAPHICS -->
+<section class="s bg2" id="infographics">
+  <div class="si">
+    <p class="s-num rv">04 — Work</p>
+    <h2 class="s-h rv d1">Infographics &<br>Data Visualization</h2>
+    <p class="s-p rv d2">I transform complex statistics and information into clear, structured visuals that make data speak for itself.</p>
+    <div class="chips rv d3">
+      <span class="chip">Visual Synthesis</span>
+      <span class="chip">Information Design</span>
+    </div>
+    <div class="inf-grid">
+      <div class="fc-card fa rv d1" data-tilt>
+        <img src="assets/page-7.png" alt="Infographics and data visualization" />
+      </div>
+      <div class="stats">
+        <div class="stat rv d2" style="background:linear-gradient(135deg,rgba(20,184,166,.14),rgba(123,47,190,.14))">
+          <div class="stat-n gtext">+40%</div>
+          <div class="stat-l">Increase in overall CRM use rate</div>
+        </div>
+        <div class="stat rv d3" style="background:linear-gradient(135deg,rgba(168,85,247,.14),rgba(59,130,246,.14))">
+          <div class="stat-n" style="background:linear-gradient(135deg,#A855F7,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">+1.7%</div>
+          <div class="stat-l">Opportunities created per week</div>
+        </div>
+        <div class="stat rv d4" style="background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(20,184,166,.14))">
+          <div class="stat-n" style="background:linear-gradient(135deg,#3b82f6,#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">+10%</div>
+          <div class="stat-l">Updates of past due date opportunities</div>
+        </div>
+        <div class="stat rv d4" style="background:linear-gradient(135deg,rgba(249,115,22,.14),rgba(168,85,247,.14))">
+          <div class="stat-n" style="background:linear-gradient(135deg,#f97316,#A855F7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">70%</div>
+          <div class="stat-l">of digitalization projects are considered critical or strategic</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- PRESENTATIONS -->
+<section class="s bg3" id="presentations">
+  <div class="si">
+    <p class="s-num rv">05 — Work</p>
+    <h2 class="s-h rv d1">PowerPoint<br>Presentations</h2>
+    <p class="s-p rv d2">I structure your ideas for maximum impact. Every slide is designed to support your message and convince your audience.</p>
+    <div class="chips rv d3">
+      <span class="chip">Visual Composition</span>
+      <span class="chip">Business Design</span>
+      <span class="chip">Optimised Layout</span>
+      <span class="chip">Sales Strategy</span>
+    </div>
+    <div class="pptx fc-card fb rv d1" data-tilt>
+      <img src="assets/page-8.png" alt="PowerPoint presentation designs" />
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <p class="s-num rv" style="text-align:center">Let's work together</p>
+  <h2 class="contact-h rv d1"><span class="gtext">Let's create<br>something great.</span></h2>
+  <p class="contact-p rv d2">My portfolio is always evolving. If a specific project caught your eye, let's talk. I'm happy to dive deep into my process and the results I've delivered.</p>
+  <div class="btns rv d3">
+    <a href="mailto:yoyovisuel@gmail.com" class="btn btn-p">Get in touch →</a>
+    <a href="#top" class="btn btn-g">Back to top ↑</a>
+  </div>
+  <div class="ccard rv d4">
+    <div class="cavatar">YA</div>
+    <div class="cinfo">
+      <p class="cn">Yonathan Abad</p>
+      <p class="ce">yoyovisuel@gmail.com</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Yonathan Abad</span>
+  <span>Visual Designer · yoyovisuel@gmail.com</span>
+</footer>
+
+<script>
+// Cursor glow
+const cg = document.getElementById('cg');
+document.addEventListener('mousemove', e => {
+  cg.style.left = e.clientX + 'px';
+  cg.style.top = e.clientY + 'px';
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+// 3D Tilt
+document.querySelectorAll('[data-tilt]').forEach(el => {
+  let raf;
+  el.addEventListener('mousemove', e => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      el.style.transform = `perspective(1200px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale3d(1.02,1.02,1.02)`;
+      el.style.transition = 'transform .08s ease';
+    });
+  });
+  el.addEventListener('mouseleave', () => {
+    cancelAnimationFrame(raf);
+    el.style.transition = 'transform .7s cubic-bezier(.16,1,.3,1)';
+    el.style.transform = '';
+  });
+});
+
+// Nav opacity on scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').style.background =
+    window.scrollY > 50 ? 'rgba(8,6,15,.97)' : 'rgba(8,6,15,.75)';
+}, { passive: true });
+</script>
+</body>
+</html>
